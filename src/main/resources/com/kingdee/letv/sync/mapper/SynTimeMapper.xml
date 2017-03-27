@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdee.letv.sync.mapper.SynTimeMapper">
+	<resultMap id="synTimeMapper" type="com.kingdee.mcloudEsb.model.SynTimeModel" >
+		<id column="FID" property="id" jdbcType="INTEGER" />
+	    <result column="FSynTime" property="synTime" jdbcType="TIMESTAMP" />
+	    <result column="FIntNo" property="intNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.kingdee.letv.sync.model.SynTimeModel">
+		insert into T_MCL_SynTime(FSynTime,FIntNo)values(#{synTime},#{intNo})
+	</insert>
+	
+	<select id="selectByNum" resultMap="synTimeMapper">
+		select * from T_MCL_SynTime where FIntNo=#{intNo} order by FSynTime DESC
+	</select>
+	
+	<update id="update" parameterType="com.kingdee.letv.sync.model.SynTimeModel">
+		update T_MCL_SynTime set FSynTime=#{synTime} where FIntNo=#{intNo}
+	</update>
+</mapper>
