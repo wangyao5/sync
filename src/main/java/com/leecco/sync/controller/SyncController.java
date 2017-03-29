@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
 @RequestMapping(path = "/Le")
 public class SyncController {
 
@@ -22,6 +21,7 @@ public class SyncController {
     @RequestMapping(value = "/sync/full", method = RequestMethod.POST)
     @ResponseBody
     private StatusVo sync() {
+        orgSyncService.syncOrg();
         return null;
     }
 
@@ -30,7 +30,7 @@ public class SyncController {
      * */
     @RequestMapping(value = "/sync/{startTime}/{endTime}", method = RequestMethod.POST)
     @ResponseBody
-    private StatusVo sync(long startTime, long endTime) {
+    private StatusVo sync(@PathVariable("startTime") long startTime, @PathVariable("endTime") long endTime) {
         return null;
     }
 }

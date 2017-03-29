@@ -1,7 +1,21 @@
 package com.leecco.sync.service;
 
-/**
- * Created by wangyao6 on 2017/3/27.
- */
+import com.kingdee.letv.sync.been.Person;
+import com.leecco.sync.ApplicationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+
+@Service
 public class UserSyncService {
+    @Autowired
+    private KingdeeApiService kingdeeApiService;
+
+    public boolean synUser() {
+        //kingdee内的所有人员信息
+        Map<String, Person> allPerson = kingdeeApiService.getAllperson();
+
+        return true;
+    }
 }
