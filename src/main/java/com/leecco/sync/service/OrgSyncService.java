@@ -2,8 +2,7 @@ package com.leecco.sync.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.kingdee.letv.sync.been.DeptDTO;
-import com.kingdee.letv.sync.been.Person;
-import org.apache.http.HttpEntity;
+import com.kingdee.letv.sync.been.DeptOrgInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -21,14 +20,16 @@ public class OrgSyncService {
     public void syncOrg(String startTime, String endTime) {
         //kingdee内的组织架构信息
         Map<String, JSONObject> kingdeeOrgs = kingdeeApiService.getKindeeOrgs();
-
+        Map<String, DeptOrgInfo> leOrgs = leApiService.getAllLeOrgs(startTime, endTime);
 
         DeptDTO depts = new DeptDTO();
         depts.setEid(kingdeeApiService.getKingdeeKey());
-        int page = 1;
-        int pageSize = 50;
-        HttpEntity entity = leApiService.getLeOrgs(startTime, endTime, page, pageSize);
 
+    }
+
+    private boolean doDelOrgs() {
+
+        return true;
     }
 
 

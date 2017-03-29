@@ -12,7 +12,7 @@ public class UserSyncService {
     @Autowired
     private KingdeeApiService kingdeeApiService;
 
-    public boolean synUser() {
+    public boolean synUser(String startTime, String endTime) {
         //kingdee内的所有人员信息
         Map<String, Person> allPerson = kingdeeApiService.getAllperson();
 
