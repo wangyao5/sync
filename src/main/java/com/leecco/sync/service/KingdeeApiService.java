@@ -123,8 +123,8 @@ public class KingdeeApiService {
         PersonAllInfo info = new PersonAllInfo();
         info.setEid(applicationProperties.getKingdeeKey());
         info.setBegin(index);
-        info.setCount(index + size);
-        nvps.add(new BasicNameValuePair("data", JSON.toJSONString(info)));
+        info.setCount(size);
+        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(info))));
         UrlEncodedFormEntity reqEntity = null;
         try {
             reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
