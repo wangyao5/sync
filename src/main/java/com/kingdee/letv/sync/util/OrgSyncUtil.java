@@ -37,7 +37,7 @@ public class OrgSyncUtil {
 	static Map<String,JSONObject> allOrgs = null;
 
     private final static Logger logger=Logger.getLogger(PersonSyncUtil.class);
-	public static void main(String[] args) {
+	public static void test(String[] args) {
 		//初始化
 		allOrgs = getAllOrg();
 		syncOrg("2016-09-05 00:00:00");
@@ -354,7 +354,6 @@ public class OrgSyncUtil {
 		String jo = JSON.toJSONString(depts);
 		return jo;
 	}
-
 	private static String getParentName(Map orgNum,Map org,String number,String orgLongName){
 		if(orgNum.get(number)!=null && !orgNum.get(number).equals("0")&&!orgNum.get(number).equals("")){
 			if(org.get(orgNum.get(number).toString())==null){

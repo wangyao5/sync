@@ -1,6 +1,6 @@
 package com.leecco.sync.bean;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 

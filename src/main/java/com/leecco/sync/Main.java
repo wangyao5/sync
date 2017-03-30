@@ -5,7 +5,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 
 public class Main {
-    public static void main(String[] argc) {
+    public static void test(String[] argc) {
         String syncOrgUrl = "http://ucapi.lecommons.com/sync_org.php?site=app&";
         String time = (System.currentTimeMillis() + "").substring(0, 10);
         int page = 1;
