@@ -1,6 +1,6 @@
 package com.leecco.sync.bean;
 
-import java.util.List;
+import java.util.Map;
 
 public class LeDeptNode {
     private String orgNum;
@@ -8,7 +8,7 @@ public class LeDeptNode {
     private String pNum;
     private int level;
     private int effect;
-    private List<LeDeptNode> nodes;
+    private Map<String, LeDeptNode> nodes;
 
     public String getOrgNum() {
         return orgNum;
@@ -50,11 +50,11 @@ public class LeDeptNode {
         this.effect = effect;
     }
 
-    public List<LeDeptNode> getNodes() {
+    public Map<String, LeDeptNode> getNodes() {
         return nodes;
     }
 
-    public void setNodes(List<LeDeptNode> nodes) {
+    public void setNodes(Map<String, LeDeptNode> nodes) {
         this.nodes = nodes;
     }
 }

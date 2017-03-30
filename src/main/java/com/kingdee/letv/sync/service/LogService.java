@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -25,7 +24,7 @@ import com.kingdee.letv.sync.model.SynTimeModel;
 public class LogService {
 	private static SqlSessionFactory sqlSessionFactory;
 	private final static Logger logger=LoggerFactory.getLogger(LogService.class);
-	
+
 	static{
 		try {
 			String resource = "config/mybatis-config.xml";
@@ -36,12 +35,12 @@ public class LogService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public SqlSession openSession(){
 		SqlSession session=sqlSessionFactory.openSession();
 		return session;
 	}
-	
+
 	public void commitsession(SqlSession session){
 		session.commit();
 		session.close();
@@ -55,8 +54,8 @@ public class LogService {
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * @param model
 	 * @return
@@ -86,9 +85,9 @@ public class LogService {
 	public List  selectById(String filter){
 		SqlSession session=sqlSessionFactory.openSession();
 		LogMapper mapper=session.getMapper(LogMapper.class);
-	
+
 		 List list= mapper.selectById(filter);
-		
+
 		session.close();
 		return list;
 	}
@@ -105,7 +104,7 @@ public class LogService {
 		session.close();
 		return synTimeModel;
 	}
-	
+
 	public SynTimeModel saveSynTimeModel(SynTimeModel model){
 		SqlSession session=sqlSessionFactory.openSession();
 		SynTimeMapper mapper=session.getMapper(SynTimeMapper.class);
@@ -129,7 +128,7 @@ public class LogService {
 		session.commit();
 		session.close();
 	}
-	
+
 	public void saveOrgModel(SqlSession session,OrgModel orgModel){
 		OrgMapper mapper=session.getMapper(OrgMapper.class);
 		if(orgModel.getId()<=0){
@@ -138,25 +137,25 @@ public class LogService {
 			mapper.updateOrgModel(orgModel);
 		}
 	}
-	
+
 	public List<OrgModel> selectByNum(String num){
 		SqlSession session=sqlSessionFactory.openSession();
 		OrgMapper mapper=session.getMapper(OrgMapper.class);
-		
+
 		List<OrgModel> list= mapper.selectByNum(num);
 		session.close();
 		return list;
 	}
 	public List<OrgModel> selectAllOrgModel(){
 		SqlSession session=sqlSessionFactory.openSession();
-		OrgMapper mapper=session.getMapper(OrgMapper.class);		
+		OrgMapper mapper=session.getMapper(OrgMapper.class);
 		List<OrgModel> list= mapper.selectAll();
 		session.close();
 		return list;
 	}
 	public List<OrgModel> selectByLimit(String id,int no1,int no2){
 		SqlSession session=sqlSessionFactory.openSession();
-		LogMapper mapper=session.getMapper(LogMapper.class);		
+		LogMapper mapper=session.getMapper(LogMapper.class);
 		List<OrgModel> list=mapper.selectByLimit(id,no1, no2);
 		session.close();
 		return list;
@@ -168,13 +167,13 @@ public class LogService {
 //		session.commit();
 //		session.close();
 //	}
-	
+
 	public void updateOrgModel(SqlSession session,OrgModel model){
 //		SqlSession session=sqlSessionFactory.openSession();
 		OrgMapper mapper=session.getMapper(OrgMapper.class);
 		mapper.updateOrgModel(model);
 	}
-	
+
 	public SsoCodeModel saveSsoCodeModel(SsoCodeModel model){
 		SqlSession session=sqlSessionFactory.openSession();
 		SsoCodeMapper mapper=session.getMapper(SsoCodeMapper.class);
@@ -195,7 +194,7 @@ public class LogService {
 	}
 	public List selectByLimit(int m,int n){
 		SqlSession session=sqlSessionFactory.openSession();
-		SsoCodeMapper mapper=session.getMapper(SsoCodeMapper.class);		
+		SsoCodeMapper mapper=session.getMapper(SsoCodeMapper.class);
 		List list=mapper.selectByLimit(m, n);
 		session.close();
 		return list;

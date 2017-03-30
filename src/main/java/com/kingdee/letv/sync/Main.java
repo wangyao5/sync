@@ -12,7 +12,7 @@ import com.kingdee.letv.sync.util.PersonSyncUtil;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public  void test(String[] args) {
         ClassLoaderUtil.loadJarPath("lib");
         ConfigUtil configUtil=new ConfigUtil("config/config.properties");
        // ConfigUtil configUtil=new ConfigUtil(System.getProperty("config.Path"));

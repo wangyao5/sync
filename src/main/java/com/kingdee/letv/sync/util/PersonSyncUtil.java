@@ -69,7 +69,7 @@ public class PersonSyncUtil {
 
     }
     
-	public static void main(String[] args) {
+	public void test(String[] args) {
 		try {
 			long start=System.currentTimeMillis();
 			logger.warn("start syn..");

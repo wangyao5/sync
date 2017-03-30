@@ -354,6 +354,7 @@ public class OrgSyncUtil {
 		String jo = JSON.toJSONString(depts);
 		return jo;
 	}
+
 	private static String getParentName(Map orgNum,Map org,String number,String orgLongName){
 		if(orgNum.get(number)!=null && !orgNum.get(number).equals("0")&&!orgNum.get(number).equals("")){
 			if(org.get(orgNum.get(number).toString())==null){

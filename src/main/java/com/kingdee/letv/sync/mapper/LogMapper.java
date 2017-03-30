@@ -5,7 +5,8 @@ import java.util.List;
 import com.kingdee.letv.sync.model.LogModel;
 
 public interface LogMapper {
-	
+
+
 	public void save(LogModel logModel);
 	
 	public List  selectById(String id);
