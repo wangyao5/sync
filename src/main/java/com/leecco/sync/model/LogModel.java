@@ -1,39 +1,40 @@
 package com.leecco.sync.model;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
 import java.io.Serializable;
 
-@Table(name="T_MCL_Log")
+//import javax.persistence.Column;
+//import javax.persistence.Table;
+
+//@Table(name="T_MCL_Log")
 public class LogModel implements Serializable{
 	//����
-	@Column(name="FID")
+//	@Column(name="FID")
 	private int id;
 	//ͬ��ʱ��
-	@Column(name="FSynTime")
+//	@Column(name="FSynTime")
 	private String synTime;
 	//�ӿڱ�ʶ
-	@Column(name="FIntNo")
+//	@Column(name="FIntNo")
 	private String intNo;
 	//����״̬
-	@Column(name="FStatus")
+//	@Column(name="FStatus")
 	private int status;//1 ���ȫ���ɹ���2 ��?�ֳɹ� -1 ���ʧ�� 0 ���δ����
 	//���ݵĲ���ֵ
-	@Column(name="FParams")
+//	@Column(name="FParams")
 	private String params;
 	//����Ľ��
-	@Column(name="FResult")
+//	@Column(name="FResult")
 	private String result;
 	//ת���󴫵ݸ���Ľ��
-	@Column(name="FMidParams")
+//	@Column(name="FMidParams")
 	private String midParams;
 	
 	//�����ܼ�¼����
-	@Column(name="FTotalCount")
+//	@Column(name="FTotalCount")
 	private int totalCount;
 	
 	//���ݳɹ���¼����
-	@Column(name="FSucessCount")
+//	@Column(name="FSucessCount")
 	private int successCount;
 	
 	public int getId() {

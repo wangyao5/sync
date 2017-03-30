@@ -13,7 +13,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.File;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 
@@ -73,7 +76,20 @@ public class CommonService {
 
     public String encrypt(String data) {
         String entryData = null;
-        File keyFile = new File(applicationProperties.getKingdeeKeyFilePath());
+        URL keyFileURL = this.getClass().getClassLoader().getResource(applicationProperties.getKingdeeKeyFilePath());
+        File keyFile = new File(keyFileURL.getFile());
+//        File keyFile = new File("file://Users/wangyao6/develop/proj/Le-OA/LeSync/build/resources/main/101.key");
+//        byte[] b = null;
+//        try {
+//            FileInputStream fileInputStream = new FileInputStream(keyFile);
+//            int size = fileInputStream.available();
+//            b = new byte[size];
+//            fileInputStream.read(b);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         try {
             byte[] b = FileUtils.readFileToByteArray(keyFile);
             PrivateKey restorePublicKey = RSAUtils.restorePrivateKey(b);

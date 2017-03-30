@@ -1,16 +1,18 @@
 package com.leecco.sync.model;
 
-import javax.persistence.Column;
 import java.io.Serializable;
+//import java.sql.Timestamp;
+
+//import javax.persistence.Column;
 
 public class OrgModel implements Serializable{
-	@Column(name="FID")
+//	@Column(name="FID")
 	private int id;
-	@Column(name="Forg_num")
+//	@Column(name="Forg_num")
 	private String org_num;
-	@Column(name="Forg_name")
+//	@Column(name="Forg_name")
 	private String org_name;
-	@Column(name="Forg_pnum")
+//	@Column(name="Forg_pnum")
 	private String pNum;
 	public int getId() {
 		return id;

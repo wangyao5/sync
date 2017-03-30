@@ -2,12 +2,12 @@ package com.kingdee.letv.sync.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+//import javax.persistence.Column;
+//import javax.persistence.Table;
 
-@Table(name="t_sso_code")
+//@Table(name="t_sso_code")
 public class SsoCodeModel implements Serializable{	
-	@Column(name="FID")
+//	@Column(name="FID")
 	private int id;
 	public int getId() {
 		return id;
@@ -15,9 +15,9 @@ public class SsoCodeModel implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	@Column(name="FCode")
+//	@Column(name="FCode")
 	private String code;
-	@Column(name="FUrl")
+//	@Column(name="FUrl")
 	private String url;
 	
 	public String getCode() {

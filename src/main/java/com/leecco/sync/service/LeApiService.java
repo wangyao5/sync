@@ -30,10 +30,10 @@ public class LeApiService {
     public HttpEntity getLeOrgs(String startTime, String endTime, int page, int pageSize) {
         String syncOrgUrl = applicationProperties.getLeeccoSyncOrgUrl();
         String time = (System.currentTimeMillis() + "").substring(0, 10);
-        String sign = commonService.getMD5("endtime=" + endTime + "&p=" + "&ps=" + pageSize + page + "&site=app&starttime=" + startTime + "&time=" + time + "8956dmqwqddsxwfvt977");
+        String sign = commonService.getMD5("endtime="+endTime+"&p="+page+"&ps=" +pageSize+"&site=app&starttime="+startTime+"&time="+time+"8956dmqwqddsxwfvt977");
         String postUrl = null;
         try {
-            postUrl = syncOrgUrl + "p=" + page + "&ps=" + pageSize + "&time=" + time + "&endtime=" + URLEncoder.encode(endTime, "utf-8") + "&starttime=" + URLEncoder.encode(startTime, "utf-8") + "&sign=" + sign;
+            postUrl = syncOrgUrl + "p="+page + "&ps=" +pageSize+"&time="+time+"&endtime="+URLEncoder.encode(endTime, "utf-8")+"&starttime="+URLEncoder.encode(startTime, "utf-8") +"&sign="+sign;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

@@ -21,7 +21,7 @@ public class SyncController {
     /**
      * @description 全量更新
      */
-    @RequestMapping(value = "/sync/full", method = RequestMethod.POST)
+    @RequestMapping(value = "/sync/full", method = RequestMethod.GET)
     @ResponseBody
     private StatusVo sync() {
         String startTime = "2013-10-01 00:00:00";

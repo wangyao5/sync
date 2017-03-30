@@ -15,8 +15,8 @@ public class LeOrg {
             return;
         }
 
-        //如果没有父节点,该节点为根节点
-        if (StringUtils.isEmpty(node.getpNum())) {
+        //如果节点值为一个空格，就是根组织
+        if (" ".equals(node.getpNum())) {
             treeMap.put(node.getOrgNum(), node);
         } else {
             allLeOrgs.put(node.getOrgNum(), node);

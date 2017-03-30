@@ -3,16 +3,16 @@ package com.kingdee.letv.sync.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+//import javax.persistence.Column;
+//import javax.persistence.Table;
 
-@Table(name="T_MCL_SynTime")
+//@Table(name="T_MCL_SynTime")
 public class SynTimeModel implements Serializable{
-	@Column(name="FID")
+//	@Column(name="FID")
 	private int id;
-	@Column(name="FIntNo")
+//	@Column(name="FIntNo")
 	private String intNo;
-	@Column(name="FSynTime")
+//	@Column(name="FSynTime")
 	private Timestamp synTime;
 	
 	
