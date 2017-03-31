@@ -68,9 +68,6 @@ public class LeApiService {
                 for (int orgIndex = 0; orgIndex < orgJSONArray.size(); orgIndex++) {
                     JSONObject dep = orgJSONArray.getJSONObject(orgIndex);
                     LeDeptNode node = new LeDeptNode();
-                    if ("10000073".equals(dep.getString("org_num")) || "LE00310000074".equals(dep.getString("org_num"))) {
-                        System.out.println(dep.getString("org_num"));
-                    }
                     String orgNum = dep.getString("org_num");
                     node.setOrgNum(orgNum);
                     node.setName(dep.getString("org_name"));

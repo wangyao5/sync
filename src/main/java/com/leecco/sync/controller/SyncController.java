@@ -24,12 +24,13 @@ public class SyncController {
     @RequestMapping(value = "/sync/full", method = RequestMethod.GET)
     @ResponseBody
     private StatusVo sync() {
-        String startTime = "2013-10-01 00:00:00";
+        String startTime = "2012-01-01 00:00:00";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String endTime = sdf.format(new Date());
+//        String endTime = "2017-03-01 00:00:00";
         orgSyncService.syncOrg(startTime, endTime);
 
-        userSyncService.synUser(startTime, endTime);
+//        userSyncService.synUser(startTime, endTime);
 
         return null;
     }

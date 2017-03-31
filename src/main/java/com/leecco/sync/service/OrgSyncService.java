@@ -22,6 +22,8 @@ public class OrgSyncService {
         //kingdee内的组织架构信息
         Map<String, JSONObject> kingdeeOrgs = kingdeeApiService.getKindeeOrgs();
         LeOrg leOrg = leApiService.getAllLeOrgs(startTime, endTime);
+        leOrg.combinToTree();
+
 
         DeptDTO depts = new DeptDTO();
         depts.setEid(kingdeeApiService.getKingdeeKey());
