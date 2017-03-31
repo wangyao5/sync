@@ -5,16 +5,17 @@ import java.util.*;
 public class LeOrg {
     private Map<String, LeDeptNode> treeMap = new HashMap<>();
     private Map<String, LeDeptNode> allLeOrgs = new HashMap<>();
-    private Map<String, LeDeptNode> LeOrgsBack = new HashMap<>();
+    private Map<String, LeDeptNode> leOrgsBack = new HashMap<>();
 
     public void add(LeDeptNode node) {
 
         //如果节点值为一个空格，就是根组织
         if (" ".equals(node.getpNum())) {
             treeMap.put(node.getOrgNum(), node);
+            leOrgsBack.put(node.getOrgNum(), node);
         } else {
             allLeOrgs.put(node.getOrgNum(), node);
-            LeOrgsBack.put(node.getOrgNum(), node);
+            leOrgsBack.put(node.getOrgNum(), node);
         }
     }
 
@@ -30,13 +31,13 @@ public class LeOrg {
 
     /**
      * @description 深度遍历查找父节点，并绑定子节点到父节点
-     * */
-    private void deepFindParent(Map<String, LeDeptNode> source ,LeDeptNode currentNode){
+     */
+    private void deepFindParent(Map<String, LeDeptNode> source, LeDeptNode currentNode) {
         LeDeptNode node = source.get(currentNode.getpNum());
         if (null == node) {
             Collection<LeDeptNode> sourceLeDeptNode = source.values();
-            for(LeDeptNode sourceChild : sourceLeDeptNode) {
-                if(null != sourceChild.getNodes()) {
+            for (LeDeptNode sourceChild : sourceLeDeptNode) {
+                if (null != sourceChild.getNodes()) {
                     deepFindParent(sourceChild.getNodes(), currentNode);
                 }
             }
@@ -50,7 +51,7 @@ public class LeOrg {
             Collection<LeDeptNode> co = allLeOrgs.values();
             LeDeptNode node = co.iterator().next();
 
-            while(true) {
+            while (true) {
                 LeDeptNode parentNode = allLeOrgs.get(node.getpNum());
                 if (null != parentNode) {
                     bindNode(parentNode, node);
@@ -65,12 +66,9 @@ public class LeOrg {
                     //3、出现错误，存在游离的节点
                     if (allLeOrgs.get(node.getOrgNum()) != null) {
                         System.out.println("org_num:" + node.getOrgNum() + ";org_name:" + node.getName());
-                        if(treeMap.get(node.getpNum()) != null) {
-                            System.out.println("In treeMap");
-                        }
 
-                        if(LeOrgsBack.get(node.getpNum()) != null) {
-                            System.out.println("In allLeOrgs");
+                        if (leOrgsBack.get(node.getpNum()) != null) {
+                            System.out.println("not found this data!");
                         }
                         allLeOrgs.remove(node.getOrgNum());
                     }
@@ -85,7 +83,7 @@ public class LeOrg {
         return treeMap;
     }
 
-    public Map<String, LeDeptNode> getAllLeOrgs() {
-        return allLeOrgs;
+    public Map<String, LeDeptNode> getLeOrgsBack() {
+        return leOrgsBack;
     }
 }
