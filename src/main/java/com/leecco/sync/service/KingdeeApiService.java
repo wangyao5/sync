@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.kingdee.letv.sync.been.DeptDTO;
 import com.kingdee.letv.sync.been.Person;
 import com.kingdee.letv.sync.been.PersonAllInfo;
+import com.kingdee.letv.sync.util.LetvUtil;
 import com.leecco.sync.ApplicationProperties;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -25,14 +26,7 @@ public class KingdeeApiService {
     private ApplicationProperties applicationProperties;
     @Autowired
     private CommonService commonService;
-
-
-
-
-    public String getKingdeeKey() {
-        return applicationProperties.getKingdeeKey();
-    }
-
+    
     /**
      * @description 获取kingdee中的部门信息
      */
@@ -71,19 +65,36 @@ public class KingdeeApiService {
         return orgs;
     }
 
-    public boolean addDepartment(List<String> departments) {
+    public boolean addDepartment(JSONArray departments) {
         String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
-
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+        nvps.add(new BasicNameValuePair("nonce", String.valueOf(cal.getTimeInMillis())));
+        nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
+        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(departments))));
+        UrlEncodedFormEntity reqEntity = null;
+        try {
+            reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpEntity resEntity = commonService.execPost(addOrgUrl, reqEntity);
         return true;
     }
 
-    public boolean delDepartment(List<String> departments) {
+    public boolean delDepartment(JSONArray departments) {
         String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
-        return true;
-    }
-
-    public boolean updateDepartment() {
-        String updateOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/update";
+        List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+        nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
+        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(departments))));
+        UrlEncodedFormEntity reqEntity = null;
+        try {
+            reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpEntity resEntity = commonService.execPost(delOrgUrl, reqEntity);
         return true;
     }
 

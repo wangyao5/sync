@@ -1,5 +1,6 @@
 package com.leecco.sync.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.leecco.sync.bean.LeOrg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class OrgSyncService {
      * @param endTime   截止时间 yyyy-MM-dd HH:mm:ss
      */
     public LeOrg syncOrg(String startTime, String endTime) {
-        List<String> delOrgs = new ArrayList<>();
-        List<String> addOrgs = new ArrayList<>();
+        JSONArray delOrgs = new JSONArray();
+        JSONArray addOrgs = new JSONArray();
 
         //kingdee内的组织架构信息
         Map<String, JSONObject> kingdeeOrgs = kingdeeApiService.getKindeeOrgs();
