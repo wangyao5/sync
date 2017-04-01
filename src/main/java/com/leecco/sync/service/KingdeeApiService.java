@@ -5,8 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.kingdee.letv.sync.been.DeptDTO;
 import com.kingdee.letv.sync.been.Person;
-import com.kingdee.letv.sync.been.PersonAllInfo;
-import com.kingdee.letv.sync.util.LetvUtil;
+import com.leecco.sync.bean.PersonAllInfo;
 import com.leecco.sync.ApplicationProperties;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -66,13 +65,19 @@ public class KingdeeApiService {
     }
 
     public boolean addDepartment(JSONArray departments) {
+        JSONArray a = new JSONArray();
+        a.add(departments.get(0));
+        JSONObject o = new JSONObject();
+        o.put("eid", applicationProperties.getKingdeeKey());
+        o.put("departments", a);
+
         String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
         Calendar cal=Calendar.getInstance();
         cal.setTime(new Date());
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
         nvps.add(new BasicNameValuePair("nonce", String.valueOf(cal.getTimeInMillis())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
-        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(departments))));
+        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(o))));
         UrlEncodedFormEntity reqEntity = null;
         try {
             reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
@@ -84,10 +89,16 @@ public class KingdeeApiService {
     }
 
     public boolean delDepartment(JSONArray departments) {
+        JSONArray a = new JSONArray();
+        a.add("乐视\\INVALID\\东北大区");
+        JSONObject o = new JSONObject();
+        o.put("eid", applicationProperties.getKingdeeKey());
+        o.put("departments", a);
+
         String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
-        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(departments))));
+        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(o))));
         UrlEncodedFormEntity reqEntity = null;
         try {
             reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
