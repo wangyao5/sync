@@ -78,6 +78,7 @@ public class LeApiService {
                 }
             }
         } while (page < maxPage);
+        leOrg.combinToTree();
         return leOrg;
     }
 }

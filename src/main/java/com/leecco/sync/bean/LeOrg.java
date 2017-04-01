@@ -86,4 +86,23 @@ public class LeOrg {
     public Map<String, LeDeptNode> getLeOrgsBack() {
         return leOrgsBack;
     }
+
+    public Map<String, Boolean> getLeOrgsWithFullPathAndStatus() {
+        Map<String, Boolean> fullPathAndStatusMap = new HashMap<>();
+        deepFindFullPath(fullPathAndStatusMap, treeMap, "");
+        return fullPathAndStatusMap;
+    }
+
+    private void deepFindFullPath(Map<String, Boolean> fullPathAndStatusMap, Map<String, LeDeptNode> node, String parentName) {
+        if (node != null) {
+            Collection<LeDeptNode> childCollection = node.values();
+            for (LeDeptNode childNode : childCollection) {
+                String path = parentName + '/' + childNode.getName();
+                fullPathAndStatusMap.put(path, childNode.getEffect() == 1);
+                if (null != childNode.getNodes()) {
+                    deepFindFullPath(fullPathAndStatusMap, childNode.getNodes(), path);
+                }
+            }
+        }
+    }
 }
