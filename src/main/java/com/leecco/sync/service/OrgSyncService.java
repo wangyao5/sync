@@ -1,9 +1,6 @@
 package com.leecco.sync.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kingdee.letv.sync.been.DeptDTO;
-import com.kingdee.letv.sync.been.DeptOrgInfo;
-import com.leecco.sync.bean.LeDeptNode;
 import com.leecco.sync.bean.LeOrg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +16,9 @@ public class OrgSyncService {
      * @param startTime 起始时间 yyyy-MM-dd HH:mm:ss
      * @param endTime   截止时间 yyyy-MM-dd HH:mm:ss
      */
-    public void syncOrg(String startTime, String endTime) {
+    public LeOrg syncOrg(String startTime, String endTime) {
+        List<String> delOrgs = new ArrayList<>();
+        List<String> addOrgs = new ArrayList<>();
 
         //kingdee内的组织架构信息
         Map<String, JSONObject> kingdeeOrgs = kingdeeApiService.getKindeeOrgs();
@@ -27,17 +26,27 @@ public class OrgSyncService {
 
         //对比kingdee的组织信息跟Leeco的数据
         Map<String, Boolean> fullPathOrgs = leOrg.getLeOrgsWithFullPathAndStatus();
+        Set<String> orgFullNames = kingdeeOrgs.keySet();
+        for (String orgName : orgFullNames) {
+            if (fullPathOrgs.get(orgName) == null) {
+                System.out.println("乐视不存在该组织：" + orgName);
+                delOrgs.add(orgName);
+            } else {
+                boolean effect = fullPathOrgs.get(orgName);
+                if (!effect) {
+                    delOrgs.add(orgName);
+                }
+                fullPathOrgs.remove(orgName);
+            }
+        }
+        addOrgs.addAll(fullPathOrgs.keySet());
+        if (addOrgs.size() > 0) {
+            kingdeeApiService.addDepartment(addOrgs);
+        }
 
-        
-        DeptDTO depts = new DeptDTO();
-        depts.setEid(kingdeeApiService.getKingdeeKey());
-
+        if (delOrgs.size() > 0) {
+            kingdeeApiService.delDepartment(delOrgs);
+        }
+        return leOrg;
     }
-
-    private boolean doDelOrgs() {
-
-        return true;
-    }
-
-
 }

@@ -27,6 +27,8 @@ public class KingdeeApiService {
     private CommonService commonService;
 
 
+
+
     public String getKingdeeKey() {
         return applicationProperties.getKingdeeKey();
     }
@@ -69,13 +71,13 @@ public class KingdeeApiService {
         return orgs;
     }
 
-    public boolean addDepartment() {
+    public boolean addDepartment(List<String> departments) {
         String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
 
         return true;
     }
 
-    public boolean delDepartment() {
+    public boolean delDepartment(List<String> departments) {
         String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
         return true;
     }

@@ -7,6 +7,9 @@ public class LeOrg {
     private Map<String, LeDeptNode> allLeOrgs = new HashMap<>();
     private Map<String, LeDeptNode> leOrgsBack = new HashMap<>();
 
+    //Leecco中的脏数据
+    private Map<String, LeDeptNode> dirtyOrgs = new HashMap<>();
+
     public void add(LeDeptNode node) {
 
         //如果节点值为一个空格，就是根组织
@@ -69,6 +72,7 @@ public class LeOrg {
 
                         if (leOrgsBack.get(node.getpNum()) != null) {
                             System.out.println("not found this data!");
+                            dirtyOrgs.put(node.getOrgNum(), node);
                         }
                         allLeOrgs.remove(node.getOrgNum());
                     }
@@ -77,14 +81,6 @@ public class LeOrg {
 
             }
         }
-    }
-
-    public Map<String, LeDeptNode> getTreeMap() {
-        return treeMap;
-    }
-
-    public Map<String, LeDeptNode> getLeOrgsBack() {
-        return leOrgsBack;
     }
 
     public Map<String, Boolean> getLeOrgsWithFullPathAndStatus() {
@@ -97,12 +93,25 @@ public class LeOrg {
         if (node != null) {
             Collection<LeDeptNode> childCollection = node.values();
             for (LeDeptNode childNode : childCollection) {
-                String path = parentName + '/' + childNode.getName();
+                String path = "";
+                if (parentName == "") {
+                    path = childNode.getName();
+                } else {
+                    path = parentName + "\\" + childNode.getName();
+                }
                 fullPathAndStatusMap.put(path, childNode.getEffect() == 1);
                 if (null != childNode.getNodes()) {
                     deepFindFullPath(fullPathAndStatusMap, childNode.getNodes(), path);
                 }
             }
         }
+    }
+
+    public Map<String, LeDeptNode> getTreeMap() {
+        return treeMap;
+    }
+
+    public Map<String, LeDeptNode> getLeOrgsBack() {
+        return leOrgsBack;
     }
 }
