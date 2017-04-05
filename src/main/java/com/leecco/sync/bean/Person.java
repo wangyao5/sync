@@ -162,6 +162,4 @@ public class Person {
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
     }
-
-
 }

@@ -3,9 +3,7 @@ package com.leecco.sync.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.kingdee.letv.sync.been.DeptDTO;
-import com.kingdee.letv.sync.been.Person;
-import com.leecco.sync.bean.PersonAllInfo;
+import com.leecco.sync.bean.Person;
 import com.leecco.sync.ApplicationProperties;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -26,7 +24,7 @@ public class KingdeeApiService {
     private ApplicationProperties applicationProperties;
     @Autowired
     private CommonService commonService;
-    
+
     /**
      * @description 获取kingdee中的部门信息
      */
@@ -34,11 +32,10 @@ public class KingdeeApiService {
         String getOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/getall";
 
         Map<String, JSONObject> orgs = new HashMap<String, JSONObject>();
-        DeptDTO dat = new DeptDTO();
-        dat.setEid(applicationProperties.getKingdeeKey());
+        String queryInfo = "{\"eid\":\"" + applicationProperties.getKingdeeKey() + "\"}";
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
-        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(dat))));
+        nvps.add(new BasicNameValuePair("data", commonService.encrypt(queryInfo)));
         UrlEncodedFormEntity reqEntity = null;
         try {
             reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
@@ -65,15 +62,15 @@ public class KingdeeApiService {
         return orgs;
     }
 
-    public String addDepartment(JSONArray departments) throws IOException, ParseException{
+    public String addDepartment(JSONArray departments) throws IOException, ParseException {
         JSONObject o = new JSONObject();
         o.put("eid", applicationProperties.getKingdeeKey());
         o.put("departments", departments);
 
         String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
-        Calendar cal=Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("nonce", String.valueOf(cal.getTimeInMillis())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
         nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(o))));
@@ -93,7 +90,7 @@ public class KingdeeApiService {
         o.put("departments", departments);
 
         String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
-        List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
         nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(o))));
         UrlEncodedFormEntity reqEntity = null;
@@ -118,7 +115,8 @@ public class KingdeeApiService {
             for (int arrIndex = 0; arrIndex < personJSONArray.size(); arrIndex++) {
                 JSONObject obj = personJSONArray.getJSONObject(arrIndex);
                 Person person = new Person();
-                person.setEmail(obj.getString("email"));
+                String email = obj.getString("email");
+                person.setEmail(email);
                 person.setName(obj.getString("name"));
                 person.setOpenId(obj.getString("openId"));
                 person.setJobTitle(obj.getString("jobTitle"));
@@ -126,7 +124,8 @@ public class KingdeeApiService {
                 person.setStatus(obj.getString("status"));
                 String phone = obj.getString("phone");
                 person.setPhone(phone);
-                if (phone != null) {
+
+                if (null != phone) {
                     allPerson.put(phone, person);
                 }
             }
@@ -141,11 +140,10 @@ public class KingdeeApiService {
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
-        PersonAllInfo info = new PersonAllInfo();
-        info.setEid(applicationProperties.getKingdeeKey());
-        info.setBegin(index);
-        info.setCount(size);
-        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(info))));
+
+        String queryInfo = "{\"eid\":\"" + applicationProperties.getKingdeeKey() + "\",\"begin\":" + index + ",\"count\":" + size + "}";
+
+        nvps.add(new BasicNameValuePair("data", commonService.encrypt(queryInfo)));
         UrlEncodedFormEntity reqEntity = null;
         try {
             reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");

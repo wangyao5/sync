@@ -31,7 +31,9 @@ public class SyncController {
         String startTime = "2012-01-01 00:00:00";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String endTime = sdf.format(new Date());
-        userSyncService.synUser(leOrg, startTime, endTime);
+
+        String syncUserStartTime = "2017-04-04 00:00:00";
+        userSyncService.synUser(leOrg, syncUserStartTime, endTime);
 
         return null;
     }
