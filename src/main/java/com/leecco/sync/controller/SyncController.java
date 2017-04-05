@@ -2,6 +2,7 @@ package com.leecco.sync.controller;
 
 import com.leecco.sync.bean.LeOrg;
 import com.leecco.sync.bean.StatusVo;
+import com.leecco.sync.bean.SyncOrgResult;
 import com.leecco.sync.service.OrgSyncService;
 import com.leecco.sync.service.UserSyncService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,8 @@ public class SyncController {
     @RequestMapping(value = "/sync/full", method = RequestMethod.GET)
     @ResponseBody
     private StatusVo sync() {
-        LeOrg leOrg = syncOrg();
+        SyncOrgResult syncOrgResult = syncOrg();
+        LeOrg leOrg = syncOrgResult.getLeOrg();
 
         String startTime = "2012-01-01 00:00:00";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -40,13 +42,13 @@ public class SyncController {
     @RequestMapping(value = "/sync/{startTime}/{endTime}", method = RequestMethod.POST)
     @ResponseBody
     private StatusVo sync(@PathVariable("startTime") String startTime, @PathVariable("endTime") String endTime) {
-        LeOrg leOrg = syncOrg();
+        SyncOrgResult syncOrgResult = syncOrg();
+        LeOrg leOrg = syncOrgResult.getLeOrg();
         userSyncService.synUser(leOrg, startTime, endTime);
-
         return null;
     }
 
-    private LeOrg syncOrg() {
+    private SyncOrgResult syncOrg() {
         String orgStartTime = "2012-01-01 00:00:00";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orgEndTime = sdf.format(new Date());

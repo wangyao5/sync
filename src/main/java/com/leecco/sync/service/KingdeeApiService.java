@@ -9,6 +9,7 @@ import com.leecco.sync.bean.PersonAllInfo;
 import com.leecco.sync.ApplicationProperties;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -64,7 +65,7 @@ public class KingdeeApiService {
         return orgs;
     }
 
-    public boolean addDepartment(JSONArray departments) {
+    public String addDepartment(JSONArray departments) throws IOException, ParseException{
         JSONObject o = new JSONObject();
         o.put("eid", applicationProperties.getKingdeeKey());
         o.put("departments", departments);
@@ -83,10 +84,10 @@ public class KingdeeApiService {
             e.printStackTrace();
         }
         HttpEntity resEntity = commonService.execPost(addOrgUrl, reqEntity);
-        return true;
+        return EntityUtils.toString(resEntity);
     }
 
-    public boolean delDepartment(JSONArray departments) {
+    public String delDepartment(JSONArray departments) throws IOException, ParseException {
         JSONObject o = new JSONObject();
         o.put("eid", applicationProperties.getKingdeeKey());
         o.put("departments", departments);
@@ -102,7 +103,7 @@ public class KingdeeApiService {
             e.printStackTrace();
         }
         HttpEntity resEntity = commonService.execPost(delOrgUrl, reqEntity);
-        return true;
+        return EntityUtils.toString(resEntity);
     }
 
     public Map<String, Person> getAllperson() {
