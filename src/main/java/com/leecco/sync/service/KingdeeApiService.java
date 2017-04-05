@@ -65,11 +65,9 @@ public class KingdeeApiService {
     }
 
     public boolean addDepartment(JSONArray departments) {
-        JSONArray a = new JSONArray();
-        a.add(departments.get(0));
         JSONObject o = new JSONObject();
         o.put("eid", applicationProperties.getKingdeeKey());
-        o.put("departments", a);
+        o.put("departments", departments);
 
         String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
         Calendar cal=Calendar.getInstance();
@@ -89,11 +87,9 @@ public class KingdeeApiService {
     }
 
     public boolean delDepartment(JSONArray departments) {
-        JSONArray a = new JSONArray();
-        a.add("乐视\\INVALID\\东北大区");
         JSONObject o = new JSONObject();
         o.put("eid", applicationProperties.getKingdeeKey());
-        o.put("departments", a);
+        o.put("departments", departments);
 
         String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
