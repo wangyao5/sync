@@ -1,5 +1,7 @@
 package com.leecco.sync.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.leecco.sync.ApplicationProperties;
 import com.leecco.sync.bean.LeOrg;
 import com.leecco.sync.bean.LeUser;
@@ -45,21 +47,27 @@ public class UserSyncService {
     }
 
     public String fullSyncUser(LeOrg leOrg) {
+        JSONArray resultJSONArray = new JSONArray();
         String startTime = "2012-01-01 00:00:00";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String endTime = sdf.format(new Date());
 
-        List<KingdeePerson> updatePersonInfoList = new ArrayList<>();//更新用户信息人员
-        List<KingdeePerson> updatePersonDepartList = new ArrayList<>();//更新组织信息人员
-        List<KingdeePerson> updatePersonStatusList = new ArrayList<>();//更新在职，离职状态人员
-        List<KingdeePerson> unUsePersonList = new ArrayList<>();//禁用人员
-        List<LeUser> addLeUserList = new ArrayList<>();//新增人员
+        JSONArray updatePersonInfoJSONArray = new JSONArray();//更新用户信息人员
+        JSONArray updatePersonDepartJSONArray = new JSONArray();//更新组织信息人员
+        JSONArray updatePersonStatusJSONArray = new JSONArray();//更新在职，离职状态人员
+        JSONArray unUsePersonJSONArray = new JSONArray();//禁用人员
+        JSONArray addLeUserList = new JSONArray();//新增人员
 
         //kingdee内的所有人员信息
         Map<String, KingdeePerson> allPerson = kingdeeApiService.getAllperson();
 
         //leeco中所有人员信息
         Map<String, LeUser> leUpdatePerson = leApiService.getAllLeUsers(leOrg, startTime, endTime);
+
+        //深度拷贝leecco中人员信息
+        Map<String, LeUser> leNewUserList = new HashMap<>();
+        leNewUserList.putAll(leNewUserList);
+
         Set<String> leUpdatePersonkeys = leUpdatePerson.keySet();
         for (String leUpdatePersonkey : leUpdatePersonkeys) {
             KingdeePersonKeyValue personKeyValue = getPerson(allPerson, leUpdatePersonkey);
@@ -72,24 +80,60 @@ public class UserSyncService {
                 KingdeePerson statusChangedPerson = statusChanged(kingdeePerson, leUser);
 
                 if (null != infoChangedPerson) {
-                    updatePersonInfoList.add(infoChangedPerson);
+                    updatePersonInfoJSONArray.add(JSONObject.toJSON(infoChangedPerson));
+                    if (updatePersonInfoJSONArray.size() >= 1000) {
+                        JSONArray result = kingdeeApiService.updateUserInfo(updatePersonInfoJSONArray);
+                        resultJSONArray.addAll(result);
+                        updatePersonInfoJSONArray.clear();
+                    }
                 }
 
                 if (null != departmentChangedPerson) {
-                    updatePersonDepartList.add(departmentChangedPerson);
+                    updatePersonDepartJSONArray.add(JSONObject.toJSON(departmentChangedPerson));
+                    if (updatePersonDepartJSONArray.size() >= 1000) {
+                        JSONArray result = kingdeeApiService.updateUserDepartment(updatePersonDepartJSONArray);
+                        resultJSONArray.addAll(result);
+                        updatePersonDepartJSONArray.clear();
+                    }
                 }
 
                 if (null != statusChangedPerson) {
-                    updatePersonStatusList.add(statusChangedPerson);
+                    updatePersonStatusJSONArray.add(JSONObject.toJSON(statusChangedPerson));
+                    if (updatePersonStatusJSONArray.size() >= 1000) {
+                        JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
+                        resultJSONArray.addAll(result);
+                        updatePersonStatusJSONArray.clear();
+                    }
                 }
 
-                leUpdatePerson.remove(leUpdatePersonkey);
+                leNewUserList.remove(leUpdatePersonkey);
                 allPerson.remove(personKeyValue.getKey());
             }
         }
-        addLeUserList.addAll(leUpdatePerson.values());
-        unUsePersonList.addAll(allPerson.values());
-        return null;
+        unUsePersonJSONArray.addAll(allPerson.values());
+
+        addLeUserList.addAll(convert(leNewUserList.values()));
+        if (updatePersonInfoJSONArray.size() > 0) {
+            JSONArray result = kingdeeApiService.updateUserInfo(updatePersonInfoJSONArray);
+            resultJSONArray.addAll(result);
+        }
+
+        if (updatePersonDepartJSONArray.size() > 0) {
+            JSONArray result = kingdeeApiService.updateUserDepartment(updatePersonDepartJSONArray);
+            resultJSONArray.addAll(result);
+        }
+
+        if (updatePersonStatusJSONArray.size() > 0) {
+            JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
+            resultJSONArray.addAll(result);
+        }
+
+        if (addLeUserList.size() > 0) {
+            JSONArray result = kingdeeApiService.addUsers(addLeUserList);
+            resultJSONArray.addAll(result);
+        }
+
+        return resultJSONArray.toJSONString();
     }
 
     private KingdeePersonKeyValue getPerson(Map<String, KingdeePerson> allPerson, String email) {
@@ -98,8 +142,11 @@ public class UserSyncService {
         if (applicationProperties.getLeeccoIsrepair()) {
             if (kingdeePerson == null) {
                 System.out.println(key);
-                key = key.substring(0, key.indexOf("@"));
-                kingdeePerson = allPerson.get(key);
+                int index = key.indexOf("@");
+                if (index > -1) {
+                    key = key.substring(0, index);
+                    kingdeePerson = allPerson.get(key);
+                }
             }
         }
 
@@ -129,7 +176,7 @@ public class UserSyncService {
             flag = true;
         }
 
-        if (!kingdeePerson.getJobTitle().equals(leUser.getJobTitle())) {
+        if (null != kingdeePerson.getJobTitle() && !kingdeePerson.getJobTitle().equals(leUser.getJobTitle())) {
             person.setJobTitle(leUser.getJobTitle());
             flag = true;
         }
@@ -172,6 +219,22 @@ public class UserSyncService {
         } else {
             return null;
         }
+    }
 
+    private KingdeePerson convert(LeUser user) {
+        KingdeePerson person = new KingdeePerson();
+        person.setPhone(user.getUserName());
+        person.setEmail(user.getUserName());
+        person.setJobTitle(user.getJobTitle());
+        person.setDepartment(user.getDepartment());
+        return person;
+    }
+
+    private JSONArray convert(Collection<LeUser> users) {
+        JSONArray array = new JSONArray();
+        for (LeUser user: users) {
+            array.add(JSONObject.toJSON(convert(user)));
+        }
+        return array;
     }
 }

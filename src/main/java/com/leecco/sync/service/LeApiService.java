@@ -134,6 +134,7 @@ public class LeApiService {
                     LeUser user = new LeUser();
                     user.setUserName(personJSONObject.getString("username"));
                     user.setNickName(personJSONObject.getString("nickname"));
+                    user.setJobTitle(personJSONObject.getString("job_title"));
                     String orgNum = personJSONObject.getString("org_num");
                     user.setOrgNum(orgNum);
                     String department = "";

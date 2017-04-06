@@ -3,6 +3,7 @@ package com.leecco.sync.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.kingdee.letv.sync.been.Person;
 import com.leecco.sync.bean.KingdeePerson;
 import com.leecco.sync.ApplicationProperties;
 import org.apache.http.HttpEntity;
@@ -32,8 +33,11 @@ public class KingdeeApiService {
         String getOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/getall";
 
         Map<String, JSONObject> orgs = new HashMap<String, JSONObject>();
-        String queryInfo = "{\"eid\":\"" + applicationProperties.getKingdeeKey() + "\"}";
+        JSONObject queryJSONObject = new JSONObject();
+        queryJSONObject.put("eid", applicationProperties.getKingdeeKey());
+        String queryInfo = queryJSONObject.toJSONString();
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
         nvps.add(new BasicNameValuePair("data", commonService.encrypt(queryInfo)));
         UrlEncodedFormEntity reqEntity = null;
@@ -68,10 +72,8 @@ public class KingdeeApiService {
         o.put("departments", departments);
 
         String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-        nvps.add(new BasicNameValuePair("nonce", String.valueOf(cal.getTimeInMillis())));
+        nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
         nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(o))));
         UrlEncodedFormEntity reqEntity = null;
@@ -91,6 +93,7 @@ public class KingdeeApiService {
 
         String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
         nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(o))));
         UrlEncodedFormEntity reqEntity = null;
@@ -168,22 +171,74 @@ public class KingdeeApiService {
         return psersionJSONObject.getJSONArray("data");
     }
 
-
-    public String updateUserInfo(JSONArray info){
-
-         return null;
+    public JSONArray updateUserInfo(JSONArray info) {
+//        String updateInfoUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateInfo";
+//        return callUserApiWithUrlAndData(updateInfoUrl, info);
+        return new JSONArray();
     }
 
-    public String updateUserDepartment(JSONArray departments){
-        return null;
+    public JSONArray updateUserDepartment(JSONArray departments) {
+//        JSONArray testData = new JSONArray();
+//        Person p = new Person();
+//        p.setOpenId("0e7ef854-91c6-11e6-9ff4-5cb9018cfd68");
+//        p.setDepartment("乐视\\总裁办\\CEO办公室");
+//        testData.add(JSONObject.toJSON(p));
+//        String updateDeptUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateDept";
+//        return callUserApiWithUrlAndData(updateDeptUrl, testData);
+        return new JSONArray();
     }
 
-    public String updateUserStatus(JSONArray status){
-
-        return null;
+    public JSONArray updateUserStatus(JSONArray status) {
+//        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateStatus";
+//        return callUserApiWithUrlAndData(updateStatusUrl, status);
+        return new JSONArray();
     }
 
-    public String addUsers(List<KingdeePerson> users) {
-        return null;
+    public JSONArray addUsers(JSONArray users) {
+//        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/add";
+//        return callUserApiWithUrlAndData(updateStatusUrl, users);
+        return new JSONArray();
+    }
+
+
+    private JSONArray callUserApiWithUrlAndData(String url, JSONArray users) {
+        JSONArray resultArray = new JSONArray();
+        int pageCount = (int) Math.ceil(((double) users.size()) / 1000);
+        int page = 0;
+        int size = 1000;
+        while (page < pageCount) {
+            JSONObject object = new JSONObject();
+            object.put("eid", applicationProperties.getKingdeeKey());
+            JSONArray updateJSONArray = new JSONArray();
+            if ((page + 1) * size > users.size()) {
+                updateJSONArray.addAll(users.subList(page * size, users.size()));
+            } else {
+                updateJSONArray.addAll(users.subList(page * size, (page + 1) * size));
+            }
+            object.put("persons", updateJSONArray);
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
+            nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
+            nvps.add(new BasicNameValuePair("data", commonService.encrypt(object.toJSONString())));
+            UrlEncodedFormEntity reqEntity = null;
+            try {
+                reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            
+//            HttpEntity resEntity = null;
+//            String responseString = "ok";
+            HttpEntity resEntity = commonService.execPost(url, reqEntity);
+            String responseString = null;
+            try {
+                responseString = EntityUtils.toString(resEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            resultArray.add(responseString);
+            page++;
+        }
+        return resultArray;
     }
 }
