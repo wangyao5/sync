@@ -1,5 +1,8 @@
 package com.leecco.sync;
 
+import com.alibaba.fastjson.JSONObject;
+import com.leecco.sync.bean.KingdeePerson;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -21,6 +24,13 @@ public class Main {
             e.printStackTrace();
         }
         System.out.println(postUrl);
+    }
+
+    public void testJson() {
+        KingdeePerson p = new KingdeePerson();
+        p.setName("wangyao@le.com");
+        String value = JSONObject.toJSONString(p);
+        System.out.println(value);
     }
 
     public static String getMD5(String key) {

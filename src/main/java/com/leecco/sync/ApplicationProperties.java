@@ -12,7 +12,7 @@ public class ApplicationProperties {
     private String kingdeeKeyFilePath;
     private String leeccoSyncOrgUrl;
     private String leeccoSyncUserUrl;
-    private int leeccoIsrepair;
+    private boolean leeccoIsrepair;
 
     @Value("${spring.kingdee.openHost}")
     public void setKingdeeHost(String kingdeeHost) {
@@ -50,12 +50,12 @@ public class ApplicationProperties {
         this.leeccoSyncUserUrl = leeccoSyncUserUrl;
     }
 
-    public int getLeeccoIsrepair() {
+    public boolean getLeeccoIsrepair() {
         return leeccoIsrepair;
     }
 
     @Value("${spring.leecco.isrepair}")
-    public void setLeeccoIsrepair(int leeccoIsrepair) {
+    public void setLeeccoIsrepair(boolean leeccoIsrepair) {
         this.leeccoIsrepair = leeccoIsrepair;
     }
 

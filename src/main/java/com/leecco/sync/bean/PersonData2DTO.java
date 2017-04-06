@@ -6,7 +6,7 @@ import java.util.List;
 public class PersonData2DTO {
     private String eid;
 
-    private List<Person> persons = new ArrayList<Person>();
+    private List<KingdeePerson> persons = new ArrayList<KingdeePerson>();
 
     public String getEid() {
         return eid;
@@ -16,11 +16,11 @@ public class PersonData2DTO {
         this.eid = eid;
     }
 
-    public List<Person> getPersons() {
+    public List<KingdeePerson> getPersons() {
         return persons;
     }
 
-    public void setPersons(List<Person> persons) {
+    public void setPersons(List<KingdeePerson> persons) {
         this.persons = persons;
     }
 

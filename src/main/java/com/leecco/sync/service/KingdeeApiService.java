@@ -3,7 +3,7 @@ package com.leecco.sync.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.leecco.sync.bean.Person;
+import com.leecco.sync.bean.KingdeePerson;
 import com.leecco.sync.ApplicationProperties;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -103,8 +103,8 @@ public class KingdeeApiService {
         return EntityUtils.toString(resEntity);
     }
 
-    public Map<String, Person> getAllperson() {
-        Map<String, Person> allPerson = new HashMap<String, Person>();
+    public Map<String, KingdeePerson> getAllperson() {
+        Map<String, KingdeePerson> allPerson = new HashMap<String, KingdeePerson>();
         int index = 0;
         int pageSize = 1000;
 
@@ -114,7 +114,7 @@ public class KingdeeApiService {
             personJSONArray = getPersonByIndexAndSize(index, pageSize);
             for (int arrIndex = 0; arrIndex < personJSONArray.size(); arrIndex++) {
                 JSONObject obj = personJSONArray.getJSONObject(arrIndex);
-                Person person = new Person();
+                KingdeePerson person = new KingdeePerson();
                 String email = obj.getString("email");
                 person.setEmail(email);
                 person.setName(obj.getString("name"));
@@ -141,8 +141,11 @@ public class KingdeeApiService {
         nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
 
-        String queryInfo = "{\"eid\":\"" + applicationProperties.getKingdeeKey() + "\",\"begin\":" + index + ",\"count\":" + size + "}";
-
+        JSONObject queryJSONObject = new JSONObject();
+        queryJSONObject.put("eid", applicationProperties.getKingdeeKey());
+        queryJSONObject.put("begin", index);
+        queryJSONObject.put("count", size);
+        String queryInfo = queryJSONObject.toJSONString();
         nvps.add(new BasicNameValuePair("data", commonService.encrypt(queryInfo)));
         UrlEncodedFormEntity reqEntity = null;
         try {
@@ -165,4 +168,22 @@ public class KingdeeApiService {
         return psersionJSONObject.getJSONArray("data");
     }
 
+
+    public String updateUserInfo(JSONArray info){
+
+         return null;
+    }
+
+    public String updateUserDepartment(JSONArray departments){
+        return null;
+    }
+
+    public String updateUserStatus(JSONArray status){
+
+        return null;
+    }
+
+    public String addUsers(List<KingdeePerson> users) {
+        return null;
+    }
 }

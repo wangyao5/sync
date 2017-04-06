@@ -6,7 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.leecco.sync.ApplicationProperties;
 import com.leecco.sync.bean.LeDeptNode;
 import com.leecco.sync.bean.LeOrg;
-import com.leecco.sync.bean.Person;
+import com.leecco.sync.bean.LeUser;
+import com.leecco.sync.bean.KingdeePerson;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,8 +109,8 @@ public class LeApiService {
      * @param endTime   截止时间 yyyy-MM-dd HH:mm:ss
      * @description 获取le下所有的人员信息
      */
-    public Map<String, Person> getAllLeUsers(LeOrg leOrg, String startTime, String endTime) {
-        Map<String, Person> personMap = new HashMap<>();
+    public Map<String, LeUser> getAllLeUsers(LeOrg leOrg, String startTime, String endTime) {
+        Map<String, LeUser> leUserMap = new HashMap<>();
         int page = 0;
         int pageSize = 100;
         int maxPage = 0;
@@ -130,14 +131,13 @@ public class LeApiService {
 
                 for (int orgIndex = 0; orgIndex < orgJSONArray.size(); orgIndex++) {
                     JSONObject personJSONObject = orgJSONArray.getJSONObject(orgIndex);
-                    Person person = new Person();
-
-                    person.setPhone(personJSONObject.getString("username"));
-                    person.setEmail(personJSONObject.getString("username"));
-                    person.setName(personJSONObject.getString("nickname"));
-                    person.setJobTitle(personJSONObject.getString("job_title"));
-                    String department = "";
+                    LeUser user = new LeUser();
+                    user.setUserName(personJSONObject.getString("username"));
+                    user.setNickName(personJSONObject.getString("nickname"));
                     String orgNum = personJSONObject.getString("org_num");
+                    user.setOrgNum(orgNum);
+                    String department = "";
+
                     Map<String, LeDeptNode> orgs = leOrg.getLeOrgsBack();
                     while (!" ".equals(orgNum) && null != orgs.get(orgNum)) {
                         LeDeptNode node = orgs.get(orgNum);
@@ -148,17 +148,20 @@ public class LeApiService {
                         }
                         orgNum = node.getpNum();
                     }
+                    user.setDepartment(department);
+                    user.setPhoneNum(personJSONObject.getString("phone"));
+                    user.setStatus(personJSONObject.getString("status"));
 
                     if ("".equals(department)) {
-                        System.out.println(JSONObject.toJSONString(person) + "------用户为游离状态");
+                        System.out.println(JSONObject.toJSONString(user) + "------用户为游离状态");
                     } else {
-                        person.setDepartment(department);
-                        personMap.put(person.getEmail(), person);
+                        user.setDepartment(department);
+                        leUserMap.put(user.getUserName(), user);
                     }
                 }
             }
         } while (page < maxPage);
-        return personMap;
+        return leUserMap;
     }
 
 
