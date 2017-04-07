@@ -288,7 +288,9 @@ public class UserSyncService {
     private JSONArray convert(Collection<LeUser> users) {
         JSONArray array = new JSONArray();
         for (LeUser user: users) {
-            array.add(JSONObject.toJSON(convert(user)));
+            if (user.getStatus().equals("T")) {
+                array.add(JSONObject.toJSON(convert(user)));
+            }
         }
         return array;
     }
