@@ -49,29 +49,29 @@ public class OrgSyncService {
             }
         }
         addOrgs.addAll(fullPathOrgs.keySet());
-//        if (addOrgs.size() > 0) {
-//            try {
-//                addOrgsKingdeeMessage = kingdeeApiService.addDepartment(addOrgs);
-//            } catch (IOException e) {
-//                addOrgsKingdeeMessage = e.getMessage();
-//                e.printStackTrace();
-//            } catch (ParseException e) {
-//                addOrgsKingdeeMessage = e.getMessage();
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        if (delOrgs.size() > 0) {
-//            try {
-//                delOrgsKingdeeMessage = kingdeeApiService.delDepartment(delOrgs);
-//            } catch (IOException e) {
-//                delOrgsKingdeeMessage = e.getMessage();
-//                e.printStackTrace();
-//            } catch (ParseException e) {
-//                delOrgsKingdeeMessage = e.getMessage();
-//                e.printStackTrace();
-//            }
-//        }
+        if (addOrgs.size() > 0) {
+            try {
+                addOrgsKingdeeMessage = kingdeeApiService.addDepartment(addOrgs);
+            } catch (IOException e) {
+                addOrgsKingdeeMessage = e.getMessage();
+                e.printStackTrace();
+            } catch (ParseException e) {
+                addOrgsKingdeeMessage = e.getMessage();
+                e.printStackTrace();
+            }
+        }
+
+        if (delOrgs.size() > 0) {
+            try {
+                delOrgsKingdeeMessage = kingdeeApiService.delDepartment(delOrgs);
+            } catch (IOException e) {
+                delOrgsKingdeeMessage = e.getMessage();
+                e.printStackTrace();
+            } catch (ParseException e) {
+                delOrgsKingdeeMessage = e.getMessage();
+                e.printStackTrace();
+            }
+        }
 
         result.setLeOrg(leOrg);
         result.setAddOrgKingdeeMessage(addOrgsKingdeeMessage);

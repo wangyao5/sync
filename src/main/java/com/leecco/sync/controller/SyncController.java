@@ -1,5 +1,6 @@
 package com.leecco.sync.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.leecco.sync.bean.LeOrg;
 import com.leecco.sync.bean.StatusVo;
 import com.leecco.sync.bean.SyncOrgResult;
@@ -27,8 +28,16 @@ public class SyncController {
     private StatusVo sync() {
         SyncOrgResult syncOrgResult = syncOrg();
         LeOrg leOrg = syncOrgResult.getLeOrg();
-        userSyncService.fullSyncUser(leOrg);
-        return null;
+        String userSyncMessage = userSyncService.fullSyncUser(leOrg);
+        
+        StatusVo vo = new StatusVo();
+        JSONObject syncMessageObj = new JSONObject();
+        syncMessageObj.put("addOrgMessage", syncOrgResult.getAddOrgKingdeeMessage());
+        syncMessageObj.put("delOrgMessage", syncOrgResult.getDelOrgKingdeeMessage());
+        syncMessageObj.put("syncUserMessage", userSyncMessage);
+        vo.setMessage(syncMessageObj.toJSONString());
+        vo.setCode(0);
+        return vo;
     }
 
     /**
@@ -39,8 +48,16 @@ public class SyncController {
     private StatusVo sync(@PathVariable("startTime") String startTime, @PathVariable("endTime") String endTime) {
         SyncOrgResult syncOrgResult = syncOrg();
         LeOrg leOrg = syncOrgResult.getLeOrg();
-        userSyncService.synUser(leOrg, startTime, endTime);
-        return null;
+        String userSyncMessage = userSyncService.synUser(leOrg, startTime, endTime);
+
+        StatusVo vo = new StatusVo();
+        JSONObject syncMessageObj = new JSONObject();
+        syncMessageObj.put("addOrgMessage", syncOrgResult.getAddOrgKingdeeMessage());
+        syncMessageObj.put("delOrgMessage", syncOrgResult.getDelOrgKingdeeMessage());
+        syncMessageObj.put("syncUserMessage", userSyncMessage);
+        vo.setMessage(syncMessageObj.toJSONString());
+        vo.setCode(0);
+        return vo;
     }
 
     private SyncOrgResult syncOrg() {
