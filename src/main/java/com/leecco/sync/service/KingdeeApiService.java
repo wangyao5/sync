@@ -170,32 +170,27 @@ public class KingdeeApiService {
         return psersionJSONObject.getJSONArray("data");
     }
 
-    /**ok*/
     public JSONArray updateUserInfo(JSONArray info) {
-//        String updateInfoUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateInfo";
-//        return callUserApiWithUrlAndData(updateInfoUrl, info);
-        return new JSONArray();
+        String updateInfoUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateInfo";
+        return callUserApiWithUrlAndData(updateInfoUrl, info);
     }
-    /**ok*/
+
     public JSONArray updateUserDepartment(JSONArray departments) {
-//        String updateDeptUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateDept";
-//        return callUserApiWithUrlAndData(updateDeptUrl, departments);
-        return new JSONArray();
+        String updateDeptUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateDept";
+        return callUserApiWithUrlAndData(updateDeptUrl, departments);
     }
-    /**ok*/
+
     public JSONArray updateUserStatus(JSONArray status) {
-//        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateStatus";
-//        return callUserApiWithUrlAndData(updateStatusUrl, status);
-        return new JSONArray();
+        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateStatus";
+        return callUserApiWithUrlAndData(updateStatusUrl, status);
     }
     /**test*/
     public JSONArray addUsers(JSONArray users) {
-//        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/add";
-//        return callUserApiWithUrlAndData(updateStatusUrl, users);
-        return new JSONArray();
+        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/add";
+        return callUserApiWithUrlAndData(updateStatusUrl, users);
     }
 
-    /**kingdee错误接口*/
+    /**kingdee错误接口,调用删除跟禁用一个效果*/
     public JSONArray delUsers(JSONArray users) {
         JSONArray testData = new JSONArray();
         testData.add("0e7ef854-91c6-11e6-9ff4-5cb9018cfd68");
