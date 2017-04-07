@@ -268,9 +268,7 @@ public class KingdeeApiService {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            
-//            HttpEntity resEntity = null;
-//            String responseString = "ok";
+
             HttpEntity resEntity = commonService.execPost(url, reqEntity);
             String responseString = null;
             try {
