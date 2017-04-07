@@ -25,7 +25,6 @@ public class SyncController {
     @RequestMapping(value = "/sync/full", method = RequestMethod.GET)
     @ResponseBody
     private StatusVo sync() {
-
         SyncOrgResult syncOrgResult = syncOrg();
         LeOrg leOrg = syncOrgResult.getLeOrg();
         userSyncService.fullSyncUser(leOrg);

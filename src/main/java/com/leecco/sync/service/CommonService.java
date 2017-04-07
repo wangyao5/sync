@@ -1,7 +1,7 @@
 package com.leecco.sync.service;
 
-import com.kingdee.letv.sync.util.RSAUtils;
 import com.leecco.sync.ApplicationProperties;
+import com.leecco.sync.utils.RSAUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -13,10 +13,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.*;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 

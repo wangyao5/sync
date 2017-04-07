@@ -141,11 +141,16 @@ public class UserSyncService {
         KingdeePerson kingdeePerson = allPerson.get(key);
         if (applicationProperties.getLeeccoIsrepair()) {
             if (kingdeePerson == null) {
-                System.out.println(key);
+                System.out.println("kingdee账号未用与账号人员：" + key);
                 int index = key.indexOf("@");
                 if (index > -1) {
                     key = key.substring(0, index);
                     kingdeePerson = allPerson.get(key);
+                    if (kingdeePerson == null) {
+                        System.out.println("kingdee导入失败人员：" + email );
+                    }
+                } else {
+                    System.out.println("不含@账号：" + key);
                 }
             }
         }
