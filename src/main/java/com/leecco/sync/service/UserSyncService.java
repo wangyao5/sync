@@ -37,7 +37,7 @@ public class UserSyncService {
 
         //深度拷贝leecco中人员信息
         Map<String, LeUser> leNewUserList = new HashMap<>();
-        leNewUserList.putAll(leNewUserList);
+        leNewUserList.putAll(leUpdatePerson);
 
         Set<String> leUpdatePersonkeys = leUpdatePerson.keySet();
         for (String leUpdatePersonkey : leUpdatePersonkeys) {
