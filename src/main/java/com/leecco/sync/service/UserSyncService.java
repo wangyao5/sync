@@ -196,9 +196,6 @@ public class UserSyncService {
                 if (index > -1) {
                     key = key.substring(0, index);
                     kingdeePerson = allPerson.get(key);
-                    if (kingdeePerson == null) {
-                        System.out.println("kingdee导入失败人员：" + email);
-                    }
                 } else {
                     System.out.println("不含@账号：" + key);
                 }
@@ -206,6 +203,7 @@ public class UserSyncService {
         }
 
         if (null == kingdeePerson) {
+            System.out.println("kingdee导入失败人员：" + email);
             return null;
         }
 
