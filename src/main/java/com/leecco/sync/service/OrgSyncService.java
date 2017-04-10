@@ -3,7 +3,6 @@ package com.leecco.sync.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.leecco.sync.bean.LeOrg;
-import com.leecco.sync.bean.SyncOrgResult;
 import org.apache.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,19 +15,15 @@ public class OrgSyncService {
     @Autowired KingdeeApiService kingdeeApiService;
     @Autowired LeApiService leApiService;
 
+    JSONArray delOrgs = new JSONArray();//需要删除的组织
+    JSONArray addOrgs = new JSONArray();//需要添加的组织
+
     /**
      * @description 启动时间段同步
      * @param startTime 起始时间 yyyy-MM-dd HH:mm:ss
      * @param endTime   截止时间 yyyy-MM-dd HH:mm:ss
      */
-    public SyncOrgResult syncOrg(String startTime, String endTime) {
-        SyncOrgResult result = new SyncOrgResult();
-        String addOrgsKingdeeMessage = "未添加组织";
-        String delOrgsKingdeeMessage = "未删除组织";
-
-        JSONArray delOrgs = new JSONArray();
-        JSONArray addOrgs = new JSONArray();
-
+    public LeOrg initOrgsInfo(String startTime, String endTime) {
         //kingdee内的组织架构信息
         Map<String, JSONObject> kingdeeOrgs = kingdeeApiService.getKindeeOrgs();
         LeOrg leOrg = leApiService.getAllLeOrgs(startTime, endTime);
@@ -48,10 +43,21 @@ public class OrgSyncService {
                 fullPathOrgs.remove(orgName);
             }
         }
-        addOrgs.addAll(fullPathOrgs.keySet());
+
+        //找出需要添加的组织
+        for (String org : fullPathOrgs.keySet()) {
+            if(fullPathOrgs.get(org)) {
+                addOrgs.add(org);
+            }
+        }
+        return leOrg;
+    }
+
+    public String syncAddOrg() {
+        String addOrgsKingdeeMessage = "未添加组织";
         if (addOrgs.size() > 0) {
             try {
-                addOrgsKingdeeMessage = kingdeeApiService.addDepartment(addOrgs);
+                addOrgsKingdeeMessage = kingdeeApiService.addDepartment(addOrgs).toJSONString();
             } catch (IOException e) {
                 addOrgsKingdeeMessage = e.getMessage();
                 e.printStackTrace();
@@ -61,9 +67,14 @@ public class OrgSyncService {
             }
         }
 
+        return addOrgsKingdeeMessage;
+    }
+
+    public String syncDelOrg() {
+        String delOrgsKingdeeMessage = "未删除组织";
         if (delOrgs.size() > 0) {
             try {
-                delOrgsKingdeeMessage = kingdeeApiService.delDepartment(delOrgs);
+                delOrgsKingdeeMessage = kingdeeApiService.delDepartment(delOrgs).toJSONString();
             } catch (IOException e) {
                 delOrgsKingdeeMessage = e.getMessage();
                 e.printStackTrace();
@@ -72,10 +83,6 @@ public class OrgSyncService {
                 e.printStackTrace();
             }
         }
-
-        result.setLeOrg(leOrg);
-        result.setAddOrgKingdeeMessage(addOrgsKingdeeMessage);
-        result.setDelOrgKingdeeMessage(delOrgsKingdeeMessage);
-        return result;
+        return delOrgsKingdeeMessage;
     }
 }

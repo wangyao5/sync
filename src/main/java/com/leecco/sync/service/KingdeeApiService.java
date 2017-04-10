@@ -65,44 +65,72 @@ public class KingdeeApiService {
         return orgs;
     }
 
-    public String addDepartment(JSONArray departments) throws IOException, ParseException {
-        JSONObject o = new JSONObject();
-        o.put("eid", applicationProperties.getKingdeeKey());
-        o.put("departments", departments);
-
-        String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
-        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-        nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
-        nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
-        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(o))));
-        UrlEncodedFormEntity reqEntity = null;
-        try {
-            reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+    public JSONArray addDepartment(JSONArray departments) throws IOException, ParseException {
+        JSONArray resultArray = new JSONArray();
+        int size = 1000;
+        int pageCount = (int) Math.ceil(((double) departments.size()) / size);
+        int page = 0;
+        while (page < pageCount) {
+            JSONObject o = new JSONObject();
+            o.put("eid", applicationProperties.getKingdeeKey());
+            JSONArray updateDepartmentJSONArray = new JSONArray();
+            if ((page + 1) * size > departments.size()) {
+                updateDepartmentJSONArray.addAll(departments.subList(page * size, departments.size()));
+            } else {
+                updateDepartmentJSONArray.addAll(departments.subList(page * size, (page + 1) * size));
+            }
+            o.put("departments", updateDepartmentJSONArray);
+            String addOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/add";
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
+            nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
+            nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSON.toJSONString(o))));
+            UrlEncodedFormEntity reqEntity = null;
+            try {
+                reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            HttpEntity resEntity = commonService.execPost(addOrgUrl, reqEntity);
+            resultArray.add(EntityUtils.toString(resEntity));
+            page = page + 1;
         }
-        HttpEntity resEntity = commonService.execPost(addOrgUrl, reqEntity);
-        return EntityUtils.toString(resEntity);
+
+        return resultArray;
     }
 
-    public String delDepartment(JSONArray departments) throws IOException, ParseException {
-        JSONObject o = new JSONObject();
-        o.put("eid", applicationProperties.getKingdeeKey());
-        o.put("departments", departments);
+    public JSONArray delDepartment(JSONArray departments) throws IOException, ParseException {
+        JSONArray resultArray = new JSONArray();
+        int size = 1000;
+        int pageCount = (int) Math.ceil(((double) departments.size()) / size);
+        int page = 0;
+        while (page < pageCount) {
+            JSONObject o = new JSONObject();
+            o.put("eid", applicationProperties.getKingdeeKey());
+            JSONArray updateDepartmentJSONArray = new JSONArray();
+            if ((page + 1) * size > departments.size()) {
+                updateDepartmentJSONArray.addAll(departments.subList(page * size, departments.size()));
+            } else {
+                updateDepartmentJSONArray.addAll(departments.subList(page * size, (page + 1) * size));
+            }
+            o.put("departments", updateDepartmentJSONArray);
 
-        String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
-        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-        nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
-        nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
-        nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(o))));
-        UrlEncodedFormEntity reqEntity = null;
-        try {
-            reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            String delOrgUrl = applicationProperties.getKingdeeHost() + "openaccess/input/dept/delete";
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
+            nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
+            nvps.add(new BasicNameValuePair("data", commonService.encrypt(JSONArray.toJSONString(o))));
+            UrlEncodedFormEntity reqEntity = null;
+            try {
+                reqEntity = new UrlEncodedFormEntity(nvps, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            HttpEntity resEntity = commonService.execPost(delOrgUrl, reqEntity);
+            resultArray.add(EntityUtils.toString(resEntity));
+            page = page + 1;
         }
-        HttpEntity resEntity = commonService.execPost(delOrgUrl, reqEntity);
-        return EntityUtils.toString(resEntity);
+        return resultArray;
     }
 
     public Map<String, KingdeePerson> getAllperson() {
@@ -240,9 +268,9 @@ public class KingdeeApiService {
 
     private JSONArray callUserApiWithUrlAndData(String url, JSONArray users) {
         JSONArray resultArray = new JSONArray();
-        int pageCount = (int) Math.ceil(((double) users.size()) / 1000);
-        int page = 0;
         int size = 1000;
+        int pageCount = (int) Math.ceil(((double) users.size()) / size);
+        int page = 0;
         while (page < pageCount) {
             JSONObject object = new JSONObject();
             object.put("eid", applicationProperties.getKingdeeKey());

@@ -26,14 +26,15 @@ public class SyncController {
     @RequestMapping(value = "/sync/full", method = RequestMethod.GET)
     @ResponseBody
     private StatusVo sync() {
-        SyncOrgResult syncOrgResult = syncOrg();
-        LeOrg leOrg = syncOrgResult.getLeOrg();
+        LeOrg leOrg = syncOrg();
+        String syncAddOrgMessage = orgSyncService.syncAddOrg();
         String userSyncMessage = userSyncService.fullSyncUser(leOrg);
+        String syncDelOrgMessage = orgSyncService.syncDelOrg();
         
         StatusVo vo = new StatusVo();
         JSONObject syncMessageObj = new JSONObject();
-        syncMessageObj.put("addOrgMessage", syncOrgResult.getAddOrgKingdeeMessage());
-        syncMessageObj.put("delOrgMessage", syncOrgResult.getDelOrgKingdeeMessage());
+        syncMessageObj.put("addOrgMessage", syncAddOrgMessage);
+        syncMessageObj.put("delOrgMessage", syncDelOrgMessage);
         syncMessageObj.put("syncUserMessage", userSyncMessage);
         vo.setMessage(syncMessageObj.toJSONString());
         vo.setCode(0);
@@ -46,24 +47,24 @@ public class SyncController {
     @RequestMapping(value = "/sync/{startTime}/{endTime}", method = RequestMethod.POST)
     @ResponseBody
     private StatusVo sync(@PathVariable("startTime") String startTime, @PathVariable("endTime") String endTime) {
-        SyncOrgResult syncOrgResult = syncOrg();
-        LeOrg leOrg = syncOrgResult.getLeOrg();
+        LeOrg leOrg = syncOrg();
+        String syncAddOrgMessage = orgSyncService.syncAddOrg();
         String userSyncMessage = userSyncService.synUser(leOrg, startTime, endTime);
-
+        String syncDelOrgMessage = orgSyncService.syncDelOrg();
         StatusVo vo = new StatusVo();
         JSONObject syncMessageObj = new JSONObject();
-        syncMessageObj.put("addOrgMessage", syncOrgResult.getAddOrgKingdeeMessage());
-        syncMessageObj.put("delOrgMessage", syncOrgResult.getDelOrgKingdeeMessage());
+        syncMessageObj.put("addOrgMessage", syncAddOrgMessage);
+        syncMessageObj.put("delOrgMessage", syncDelOrgMessage);
         syncMessageObj.put("syncUserMessage", userSyncMessage);
         vo.setMessage(syncMessageObj.toJSONString());
         vo.setCode(0);
         return vo;
     }
 
-    private SyncOrgResult syncOrg() {
+    private LeOrg syncOrg() {
         String orgStartTime = "2012-01-01 00:00:00";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orgEndTime = sdf.format(new Date());
-        return orgSyncService.syncOrg(orgStartTime, orgEndTime);
+        return orgSyncService.initOrgsInfo(orgStartTime, orgEndTime);
     }
 }

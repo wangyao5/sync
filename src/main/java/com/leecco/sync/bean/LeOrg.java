@@ -94,7 +94,7 @@ public class LeOrg {
             Collection<LeDeptNode> childCollection = node.values();
             for (LeDeptNode childNode : childCollection) {
                 String path = "";
-                if (parentName == "") {
+                if (parentName.equals("")) {
                     path = childNode.getName();
                 } else {
                     path = parentName + "\\" + childNode.getName();

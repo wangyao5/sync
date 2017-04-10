@@ -37,7 +37,7 @@ public class UserSyncService {
 
         //深度拷贝leecco中人员信息
         Map<String, LeUser> leNewUserList = new HashMap<>();
-        leNewUserList.putAll(leNewUserList);
+        leNewUserList.putAll(leUpdatePerson);
 
         Set<String> leUpdatePersonkeys = leUpdatePerson.keySet();
         for (String leUpdatePersonkey : leUpdatePersonkeys) {
@@ -111,13 +111,20 @@ public class UserSyncService {
 
         //深度拷贝leecco中人员信息
         Map<String, LeUser> leNewUserList = new HashMap<>();
-        leNewUserList.putAll(leNewUserList);
+        leNewUserList.putAll(leUpdatePerson);
 
         Set<String> leUpdatePersonkeys = leUpdatePerson.keySet();
         for (String leUpdatePersonkey : leUpdatePersonkeys) {
+
             KingdeePersonKeyValue personKeyValue = getPerson(allPerson, leUpdatePersonkey);
             if (null != personKeyValue) {
                 LeUser leUser = leUpdatePerson.get(leUpdatePersonkey);
+                //非在职人员直接不做任何更新处理
+                if (!leUser.getStatus().equals("T")) {
+                    leNewUserList.remove(leUpdatePersonkey);
+                    allPerson.remove(personKeyValue.getKey());
+                    continue;
+                }
 
                 KingdeePerson kingdeePerson = personKeyValue.getValue();
                 KingdeePerson infoChangedPerson = infoChanged(kingdeePerson, leUser);
@@ -126,29 +133,29 @@ public class UserSyncService {
 
                 if (null != infoChangedPerson) {
                     updatePersonInfoJSONArray.add(JSONObject.toJSON(infoChangedPerson));
-                    if (updatePersonInfoJSONArray.size() >= 1000) {
-                        JSONArray result = kingdeeApiService.updateUserInfo(updatePersonInfoJSONArray);
-                        resultJSONArray.addAll(result);
-                        updatePersonInfoJSONArray.clear();
-                    }
+//                    if (updatePersonInfoJSONArray.size() >= 1000) {
+//                        JSONArray result = kingdeeApiService.updateUserInfo(updatePersonInfoJSONArray);
+//                        resultJSONArray.addAll(result);
+//                        updatePersonInfoJSONArray.clear();
+//                    }
                 }
 
                 if (null != departmentChangedPerson) {
                     updatePersonDepartJSONArray.add(JSONObject.toJSON(departmentChangedPerson));
-                    if (updatePersonDepartJSONArray.size() >= 1000) {
-                        JSONArray result = kingdeeApiService.updateUserDepartment(updatePersonDepartJSONArray);
-                        resultJSONArray.addAll(result);
-                        updatePersonDepartJSONArray.clear();
-                    }
+//                    if (updatePersonDepartJSONArray.size() >= 1000) {
+//                        JSONArray result = kingdeeApiService.updateUserDepartment(updatePersonDepartJSONArray);
+//                        resultJSONArray.addAll(result);
+//                        updatePersonDepartJSONArray.clear();
+//                    }
                 }
 
                 if (null != statusChangedPerson) {
                     updatePersonStatusJSONArray.add(JSONObject.toJSON(statusChangedPerson));
-                    if (updatePersonStatusJSONArray.size() >= 1000) {
-                        JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
-                        resultJSONArray.addAll(result);
-                        updatePersonStatusJSONArray.clear();
-                    }
+//                    if (updatePersonStatusJSONArray.size() >= 1000) {
+//                        JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
+//                        resultJSONArray.addAll(result);
+//                        updatePersonStatusJSONArray.clear();
+//                    }
                 }
 
                 leNewUserList.remove(leUpdatePersonkey);
@@ -158,7 +165,7 @@ public class UserSyncService {
 
         unUsePersonJSONArray.addAll(convertToUnUse(allPerson.values()));
         if (unUsePersonJSONArray.size() > 0) {
-            JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
+            JSONArray result = kingdeeApiService.updateUserStatus(unUsePersonJSONArray);
             resultJSONArray.addAll(result);
         }
 
@@ -208,7 +215,7 @@ public class UserSyncService {
         if (null == kingdeePerson) {
             return null;
         }
-
+        
         return new KingdeePersonKeyValue(key, kingdeePerson);
     }
 
@@ -247,7 +254,7 @@ public class UserSyncService {
     private KingdeePerson statusChanged(KingdeePerson kingdeePerson, LeUser leUser) {
         boolean flag = false;
         String type = "";
-        if (leUser.getStatus().equals("T")) {
+        if (leUser.getStatus().equals("N")) {
             //注销-->正常
             if (kingdeePerson.getStatus().equals("0")) {
                 flag = true;
@@ -258,7 +265,7 @@ public class UserSyncService {
                 flag = true;
                 type = "4";
             }
-        } else if (leUser.getStatus().equals("N")) {
+        } else {
             //正常-->禁用
             if (kingdeePerson.getStatus().equals("1")) {
                 flag = true;
@@ -288,7 +295,7 @@ public class UserSyncService {
     private JSONArray convert(Collection<LeUser> users) {
         JSONArray array = new JSONArray();
         for (LeUser user: users) {
-            if (user.getStatus().equals("T")) {
+            if (user.getStatus().equals("N")) {
                 array.add(JSONObject.toJSON(convert(user)));
             }
         }
@@ -298,13 +305,29 @@ public class UserSyncService {
     private JSONArray convertToUnUse(Collection<KingdeePerson> users) {
         JSONArray array = new JSONArray();
         for (KingdeePerson person: users) {
-            //正常-->禁用
-            if (person.getStatus().equals("1")) {
-                KingdeePerson p = new KingdeePerson();
-                p.setOpenId(person.getOpenId());
-                p.setType("3");
-                array.add(JSONObject.toJSON(p));
+            if (null == person.getStatus()) {
+                //正常-->禁用
+                if (!person.getType().equals("3")) {
+                    KingdeePerson p = new KingdeePerson();
+                    p.setOpenId(person.getOpenId());
+                    p.setType("3");
+                    array.add(JSONObject.toJSON(p));
+                    continue;
+                }
             }
+
+            if (person.getType() == null) {
+                //正常-->禁用
+                if (person.getStatus().equals("1")) {
+                    KingdeePerson p = new KingdeePerson();
+                    p.setOpenId(person.getOpenId());
+                    p.setType("3");
+                    array.add(JSONObject.toJSON(p));
+                    continue;
+                }
+            }
+
+
         }
         return array;
     }

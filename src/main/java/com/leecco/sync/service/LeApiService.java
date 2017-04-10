@@ -7,7 +7,6 @@ import com.leecco.sync.ApplicationProperties;
 import com.leecco.sync.bean.LeDeptNode;
 import com.leecco.sync.bean.LeOrg;
 import com.leecco.sync.bean.LeUser;
-import com.leecco.sync.bean.KingdeePerson;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
