@@ -120,7 +120,7 @@ public class UserSyncService {
             if (null != personKeyValue) {
                 LeUser leUser = leUpdatePerson.get(leUpdatePersonkey);
                 //非在职人员直接不做任何更新处理
-                if (!leUser.getStatus().equals("T")) {
+                if (!leUser.getStatus().equals("N")) {
                     leNewUserList.remove(leUpdatePersonkey);
                     allPerson.remove(personKeyValue.getKey());
                     continue;
@@ -169,6 +169,11 @@ public class UserSyncService {
             resultJSONArray.addAll(result);
         }
 
+        if (updatePersonStatusJSONArray.size() > 0) {
+            JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
+            resultJSONArray.addAll(result);
+        }
+
         addLeUserList.addAll(convert(leNewUserList.values()));
         if (updatePersonInfoJSONArray.size() > 0) {
             JSONArray result = kingdeeApiService.updateUserInfo(updatePersonInfoJSONArray);
@@ -177,11 +182,6 @@ public class UserSyncService {
 
         if (updatePersonDepartJSONArray.size() > 0) {
             JSONArray result = kingdeeApiService.updateUserDepartment(updatePersonDepartJSONArray);
-            resultJSONArray.addAll(result);
-        }
-
-        if (updatePersonStatusJSONArray.size() > 0) {
-            JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
             resultJSONArray.addAll(result);
         }
 
@@ -220,7 +220,7 @@ public class UserSyncService {
     }
 
     private KingdeePerson departmentChanged(KingdeePerson kingdeePerson, LeUser leUser) {
-        if (kingdeePerson.getDepartment().equals(leUser.getDepartment())) {
+        if (kingdeePerson.getDepartment().equals(leUser.getDepartment()) || !leUser.getStatus().equals("N")) {
             return null;
         }
 
@@ -243,7 +243,8 @@ public class UserSyncService {
             flag = true;
         }
 
-        if (flag) {
+        //只允许修改职员工信息
+        if (flag && leUser.getStatus().equals("N")) {
             person.setOpenId(kingdeePerson.getOpenId());
             return person;
         } else {

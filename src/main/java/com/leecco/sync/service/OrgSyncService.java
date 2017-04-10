@@ -33,7 +33,7 @@ public class OrgSyncService {
         Set<String> orgFullNames = kingdeeOrgs.keySet();
         for (String orgName : orgFullNames) {
             if (fullPathOrgs.get(orgName) == null) {
-                System.out.println("乐视不存在该组织：" + orgName + "将执行删除操作");
+                System.out.println("乐视不存在该组织：<" + orgName + ">将执行删除操作");
                 delOrgs.add(orgName);
             } else {
                 boolean effect = fullPathOrgs.get(orgName);

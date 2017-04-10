@@ -166,7 +166,7 @@ public class KingdeeApiService {
     }
 
     private JSONArray getPersonByIndexAndSize(int index, int size) {
-        String getPersonUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/getall";
+        String getPersonUrl = applicationProperties.getKingdeeHost() + "openaccess/input/person/getall";
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("nonce", String.valueOf(new Date().getTime())));
         nvps.add(new BasicNameValuePair("eid", applicationProperties.getKingdeeKey()));
@@ -199,22 +199,22 @@ public class KingdeeApiService {
     }
 
     public JSONArray updateUserInfo(JSONArray info) {
-        String updateInfoUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateInfo";
+        String updateInfoUrl = applicationProperties.getKingdeeHost() + "openaccess/input/person/updateInfo";
         return callUserApiWithUrlAndData(updateInfoUrl, info);
     }
 
     public JSONArray updateUserDepartment(JSONArray departments) {
-        String updateDeptUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateDept";
+        String updateDeptUrl = applicationProperties.getKingdeeHost() + "openaccess/input/person/updateDept";
         return callUserApiWithUrlAndData(updateDeptUrl, departments);
     }
 
     public JSONArray updateUserStatus(JSONArray status) {
-        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/updateStatus";
+        String updateStatusUrl = applicationProperties.getKingdeeHost() + "openaccess/input/person/updateStatus";
         return callUserApiWithUrlAndData(updateStatusUrl, status);
     }
     /**test*/
     public JSONArray addUsers(JSONArray users) {
-        String updateStatusUrl = applicationProperties.getKingdeeHost() + "/openaccess/input/person/add";
+        String updateStatusUrl = applicationProperties.getKingdeeHost() + "openaccess/input/person/add";
         return callUserApiWithUrlAndData(updateStatusUrl, users);
     }
 
@@ -251,7 +251,7 @@ public class KingdeeApiService {
                 e.printStackTrace();
             }
 
-            String url = applicationProperties.getKingdeeHost() + "/openaccess/input/person/delete";
+            String url = applicationProperties.getKingdeeHost() + "openaccess/input/person/delete";
             HttpEntity resEntity = commonService.execPost(url, reqEntity);
             String responseString = null;
             try {
