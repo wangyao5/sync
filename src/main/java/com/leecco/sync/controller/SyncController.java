@@ -3,7 +3,6 @@ package com.leecco.sync.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.leecco.sync.bean.LeOrg;
 import com.leecco.sync.bean.StatusVo;
-import com.leecco.sync.bean.SyncOrgResult;
 import com.leecco.sync.service.OrgSyncService;
 import com.leecco.sync.service.UserSyncService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class SyncController {
     /**
      * @description 全量更新
      */
-    @RequestMapping(value = "/sync/full", method = RequestMethod.GET)
+    @RequestMapping(value = "/sync/full", method = RequestMethod.POST)
     @ResponseBody
     private StatusVo sync() {
         LeOrg leOrg = syncOrg();
