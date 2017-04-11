@@ -131,7 +131,7 @@ public class LeApiService {
                 for (int orgIndex = 0; orgIndex < orgJSONArray.size(); orgIndex++) {
                     JSONObject personJSONObject = orgJSONArray.getJSONObject(orgIndex);
                     LeUser user = new LeUser();
-                    user.setUserName(personJSONObject.getString("username"));
+                    user.setUserName(personJSONObject.getString("username").trim());
                     user.setNickName(personJSONObject.getString("nickname"));
                     user.setJobTitle(personJSONObject.getString("job_title"));
                     String orgNum = personJSONObject.getString("org_num");
