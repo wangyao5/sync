@@ -141,7 +141,7 @@ public class LeApiService {
                     Map<String, LeDeptNode> orgs = leOrg.getLeOrgsBack();
                     while (!" ".equals(orgNum) && null != orgs.get(orgNum)) {
                         LeDeptNode node = orgs.get(orgNum);
-                        if (department == "") {
+                        if (department.equals("")) {
                             department = node.getName();
                         } else {
                             department = node.getName() + "\\" + department;
