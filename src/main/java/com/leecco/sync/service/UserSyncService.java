@@ -44,6 +44,12 @@ public class UserSyncService {
             KingdeePersonKeyValue personKeyValue = getPerson(allPerson, leUpdatePersonkey);
             if (null != personKeyValue) {
                 LeUser leUser = leUpdatePerson.get(leUpdatePersonkey);
+                //非在职人员直接不做任何更新处理
+                if (!leUser.getStatus().equals("N")) {
+                    leNewUserList.remove(leUpdatePersonkey);
+                    allPerson.remove(personKeyValue.getKey());
+                    continue;
+                }
 
                 KingdeePerson kingdeePerson = personKeyValue.getValue();
                 KingdeePerson infoChangedPerson = infoChanged(kingdeePerson, leUser);
@@ -133,29 +139,14 @@ public class UserSyncService {
 
                 if (null != infoChangedPerson) {
                     updatePersonInfoJSONArray.add(JSONObject.toJSON(infoChangedPerson));
-//                    if (updatePersonInfoJSONArray.size() >= 1000) {
-//                        JSONArray result = kingdeeApiService.updateUserInfo(updatePersonInfoJSONArray);
-//                        resultJSONArray.addAll(result);
-//                        updatePersonInfoJSONArray.clear();
-//                    }
                 }
 
                 if (null != departmentChangedPerson) {
                     updatePersonDepartJSONArray.add(JSONObject.toJSON(departmentChangedPerson));
-//                    if (updatePersonDepartJSONArray.size() >= 1000) {
-//                        JSONArray result = kingdeeApiService.updateUserDepartment(updatePersonDepartJSONArray);
-//                        resultJSONArray.addAll(result);
-//                        updatePersonDepartJSONArray.clear();
-//                    }
                 }
 
                 if (null != statusChangedPerson) {
                     updatePersonStatusJSONArray.add(JSONObject.toJSON(statusChangedPerson));
-//                    if (updatePersonStatusJSONArray.size() >= 1000) {
-//                        JSONArray result = kingdeeApiService.updateUserStatus(updatePersonStatusJSONArray);
-//                        resultJSONArray.addAll(result);
-//                        updatePersonStatusJSONArray.clear();
-//                    }
                 }
 
                 leNewUserList.remove(leUpdatePersonkey);
