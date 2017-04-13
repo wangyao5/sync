@@ -156,7 +156,7 @@ public class KingdeeApiService {
                 person.setPhone(phone);
 
                 if (null != phone) {
-                    allPerson.put(phone, person);
+                    allPerson.put(phone.trim(), person);
                 }
             }
             index = index + pageSize;
